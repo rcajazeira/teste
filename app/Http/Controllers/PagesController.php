@@ -48,3 +48,5 @@ class PagesController extends Controller
         // compact('produtos') é o mesmo que ['produtos' => $produtos]
     }
 }
+
+//teste
