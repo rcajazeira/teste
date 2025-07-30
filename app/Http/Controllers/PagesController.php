@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Product; // IMPORTANTE: Importe o Model Product aqui!
 
 class PagesController extends Controller
 {
@@ -12,41 +12,55 @@ class PagesController extends Controller
      */
     public function aboutUs()
     {
-        // O controller decide qual view carregar
-        // 'components.index' se refere a resources/views/components/index.blade.php
         return view('components.index');
     }
 
     /**
      * Exibe a página de "Produtos".
+     * Busca os produtos do banco de dados.
      */
     public function products()
     {
-        // Aqui você poderia buscar produtos de um banco de dados (futuro!)
-        // Por enquanto, vamos criar alguns dados de exemplo
-        $produtos = [
-            [
-                'nome' => 'Motor Elétrico Industrial de 5HP',
-                'descricao' => 'Motor robusto de alta performance, ideal para aplicações industriais.',
-                'funcao' => 'Converte energia elétrica em energia mecânica.'
-            ],
-            [
-                'nome' => 'Bomba Hidráulica de Engrenagens',
-                'descricao' => 'Bomba compacta e eficiente para sistemas hidráulicos.',
-                'funcao' => 'Transfere fluidos para gerar força e movimento.'
-            ],
-            [
-                'nome' => 'Atuador Linear Elétrico',
-                'descricao' => 'Dispositivo mecânico que converte movimento rotativo em movimento linear.',
-                'funcao' => 'Move, levanta, empurra ou puxa objetos em uma linha reta.'
-            ]
-        ];
+        // Buscar TODOS os produtos do banco de dados usando o Model Product
+        $produtos = Product::all(); // Product::all() retorna uma coleção de todos os registros da tabela 'products'
 
         // Retorna a view 'components.produto' e PASSA OS DADOS $produtos para ela
-        // O segundo argumento do 'view()' é um array com os dados
         return view('components.produto', compact('produtos'));
-        // compact('produtos') é o mesmo que ['produtos' => $produtos]
+    }
+
+    /**
+     * Exibe o formulário para criar um novo produto.
+     */
+    public function createProductForm()
+    {
+        // Retorna a view que contém o formulário para adicionar produtos
+        return view('components.create_product');
+    }
+
+    /**
+     * Armazena um novo produto no banco de dados.
+     */
+    public function storeProduct(Request $request)
+    {
+        // 1. Validação dos dados do formulário
+        $request->validate([
+            'nome'      => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'preco'     => 'required|numeric|min:0',
+            // Se você tiver a coluna 'funcao' na sua migration e quiser validá-la:
+            // 'funcao'    => 'nullable|string|max:255',
+        ]);
+
+        // 2. Criar um novo produto no banco de dados usando o Model Product
+        Product::create([
+            'nome'      => $request->nome,
+            'descricao' => $request->descricao,
+            'preco'     => $request->preco,
+            // Se tiver 'funcao':
+            // 'funcao'    => $request->funcao,
+        ]);
+
+        // 3. Redirecionar de volta para a lista de produtos com uma mensagem de sucesso
+        return redirect()->route('products.index')->with('success', 'Produto adicionado com sucesso!');
     }
 }
-
-//teste
