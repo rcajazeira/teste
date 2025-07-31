@@ -16,10 +16,22 @@
     @endif
 
     <ul class="product-list">
-        {{-- O @empty é um recurso do Blade que exibe o conteúdo se o array estiver vazio --}}
         @forelse($produtos as $produto)
             <li class="product-item">
-                <h3>{{ $produto->nome }}</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>{{ $produto->nome }}</h3>
+                    <div class="actions">
+                        {{-- Botão de Edição --}}
+                        <a href="{{ route('products.edit', $produto->id) }}" style="background-color: #ffc107; color: black; padding: 5px 10px; border-radius: 4px; text-decoration: none;">Editar</a>
+
+                        {{-- Formulário de Exclusão --}}
+                        <form action="{{ route('products.destroy', $produto->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE') {{-- OBRIGATÓRIO para a rota DELETE --}}
+                            <button type="submit" style="background-color: #dc3545; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">Excluir</button>
+                        </form>
+                    </div>
+                </div>
                 <p>
                     **Descrição:** {{ $produto->descricao }}
                 </p>

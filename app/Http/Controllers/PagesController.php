@@ -3,64 +3,85 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product; // IMPORTANTE: Importe o Model Product aqui!
+use App\Models\Product;
 
 class PagesController extends Controller
 {
-    /**
-     * Exibe a página "Sobre a Empresa".
-     */
     public function aboutUs()
     {
         return view('components.index');
     }
 
-    /**
-     * Exibe a página de "Produtos".
-     * AGORA BUSCA OS PRODUTOS DO BANCO DE DADOS.
-     */
     public function products()
     {
-        // Buscar TODOS os produtos do banco de dados usando o Model Product
         $produtos = Product::all();
-
-        // Retorna a view 'components.produto' e PASSA OS DADOS $produtos para ela
         return view('components.produto', compact('produtos'));
     }
 
-    /**
-     * Exibe o formulário para criar um novo produto.
-     */
     public function createProductForm()
     {
-        // Retorna a view que contém o formulário para adicionar produtos
         return view('components.create_product');
     }
 
-    /**
-     * Armazena um novo produto no banco de dados.
-     */
     public function storeProduct(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'preco' => 'required|numeric|min:0',
+        ]);
+
+        Product::create([
+            'nome' => $request->nome,
+            'descricao' => $request->descricao,
+            'preco' => $request->preco,
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Produto adicionado com sucesso!');
+    }
+
+    // **NOVOS MÉTODOS PARA EDITAR E DELETAR**
+
+    /**
+     * Exibe o formulário de edição para um produto específico.
+     */
+    public function editProductForm(Product $product)
+    {
+        // O Laravel automaticamente encontra o produto com o ID da URL
+        return view('components.edit_product', ['produto' => $product]);
+    }
+
+    /**
+     * Atualiza um produto específico no banco de dados.
+     */
+    public function updateProduct(Request $request, Product $product)
     {
         // 1. Validação dos dados do formulário
         $request->validate([
-            'nome'      => 'required|string|max:255',
+            'nome' => 'required|string|max:255',
             'descricao' => 'required|string',
-            'preco'     => 'required|numeric|min:0',
-            // Se você tiver a coluna 'funcao' na sua migration e quiser validá-la:
-            // 'funcao'    => 'nullable|string|max:255',
+            'preco' => 'required|numeric|min:0',
         ]);
 
-        // 2. Criar um novo produto no banco de dados usando o Model Product
-        Product::create([
-            'nome'      => $request->nome,
+        // 2. Atualizar os dados do produto no banco de dados
+        $product->update([
+            'nome' => $request->nome,
             'descricao' => $request->descricao,
-            'preco'     => $request->preco,
-            // Se tiver 'funcao' no seu banco de dados:
-            // 'funcao'    => $request->funcao,
+            'preco' => $request->preco,
         ]);
 
         // 3. Redirecionar de volta para a lista de produtos com uma mensagem de sucesso
-        return redirect()->route('products.index')->with('success', 'Produto adicionado com sucesso!');
+        return redirect()->route('products.index')->with('success', 'Produto atualizado com sucesso!');
+    }
+
+    /**
+     * Deleta um produto específico do banco de dados.
+     */
+    public function deleteProduct(Product $product)
+    {
+        $product->delete();
+
+        // Redirecionar para a lista de produtos com uma mensagem de sucesso
+        return redirect()->route('products.index')->with('success', 'Produto excluído com sucesso!');
     }
 }
