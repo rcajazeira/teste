@@ -18,7 +18,7 @@ class Product extends Model
         'nome',
         'descricao',
         'preco',
-        // Se você tiver uma coluna 'funcao' no banco de dados, adicione-a aqui também:
+        // Se a coluna 'funcao' existe na sua tabela 'products', adicione-a aqui também:
         // 'funcao',
     ];
 

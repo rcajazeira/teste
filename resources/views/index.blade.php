@@ -30,7 +30,7 @@
         </nav>
     </header>
 
-    <div class="container"> {{-- ESTE É O CONTAINER PRINCIPAL --}}
+    <div class="container"> {{-- ESTE É O CONTAINER PRINCIPAL DO LAYOUT --}}
         @yield('content') {{-- AQUI O CONTEÚDO DA VIEW ESPECÍFICA SERÁ INSERIDO --}}
     </div>
 

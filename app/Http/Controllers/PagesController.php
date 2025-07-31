@@ -17,12 +17,12 @@ class PagesController extends Controller
 
     /**
      * Exibe a página de "Produtos".
-     * Busca os produtos do banco de dados.
+     * AGORA BUSCA OS PRODUTOS DO BANCO DE DADOS.
      */
     public function products()
     {
         // Buscar TODOS os produtos do banco de dados usando o Model Product
-        $produtos = Product::all(); // Product::all() retorna uma coleção de todos os registros da tabela 'products'
+        $produtos = Product::all();
 
         // Retorna a view 'components.produto' e PASSA OS DADOS $produtos para ela
         return view('components.produto', compact('produtos'));
@@ -56,7 +56,7 @@ class PagesController extends Controller
             'nome'      => $request->nome,
             'descricao' => $request->descricao,
             'preco'     => $request->preco,
-            // Se tiver 'funcao':
+            // Se tiver 'funcao' no seu banco de dados:
             // 'funcao'    => $request->funcao,
         ]);
 
