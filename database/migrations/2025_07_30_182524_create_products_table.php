@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // Coluna 'id' auto-incrementável e chave primária
             $table->string('nome'); // Coluna para o nome do produto (texto curto)
             $table->text('descricao'); // Coluna para a descrição (texto mais longo)
-            $table->decimal('preco', 8, 2); // Coluna para o preço: 8 dígitos no total, 2 casas decimais
+            $table->decimal('preco', 30, 2); // Coluna para o preço: 8 dígitos no total, 2 casas decimais
 
             // Se precisar de 'funcao' também, pode adicionar de volta:
             // $table->string('funcao')->nullable(); // Exemplo de 'funcao' opcional

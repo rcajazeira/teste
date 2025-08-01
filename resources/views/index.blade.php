@@ -27,6 +27,21 @@
         <nav>
             <a href="/" class="nav-link">Sobre a Empresa</a>
             <a href="/produtos" class="nav-link">Nossos Produtos</a>
+            
+            @guest {{-- Diretiva que exibe o conteúdo apenas se o usuário NÃO estiver logado --}}
+                <a href="{{ route('login') }}" class="nav-link">Login</a>
+                <a href="{{ route('register') }}" class="nav-link">Cadastro</a>
+            @endguest
+
+            @auth {{-- Diretiva que exibe o conteúdo apenas se o usuário ESTIVER logado --}}
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                        Logout
+                    </button>
+                </form>
+            @endauth
         </nav>
     </header>
 

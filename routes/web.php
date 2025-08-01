@@ -28,3 +28,15 @@ Route::prefix('produtos')->name('products.')->group(function () {
     // Rota para deletar um produto específico
     Route::delete('/{product}', [PagesController::class, 'deleteProduct'])->name('destroy');
 });
+
+// ... (outras rotas existentes)
+use App\Http\Controllers\AuthController;
+
+// Rotas de Autenticação
+Route::get('/registro', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/registro', [AuthController::class, 'register']);
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
